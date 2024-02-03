@@ -11,8 +11,10 @@ import (
 )
 
 // Выделим функцию для инициализации однотипных запросов
-func initTestRequest(count string, city string) *httptest.ResponseRecorder {
-	target := fmt.Sprintf("/cafe?count=%s&city=%s", count, city)
+// count - количество кафе в запросе
+// city - название города
+func initTestRequest(count int, city string) *httptest.ResponseRecorder {
+	target := fmt.Sprintf("/cafe?count=%d&city=%s", count, city)
 
 	req := httptest.NewRequest("GET", target, nil)
 
@@ -27,11 +29,11 @@ func initTestRequest(count string, city string) *httptest.ResponseRecorder {
 func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 	totalCount := 4
 
-	resp := initTestRequest("7", "moscow")
+	resp := initTestRequest(7, "moscow")
 
 	// проверка: код ответа 200, тело ответа не пустое
 	require.Equal(t, http.StatusOK, resp.Code)
-	assert.NotEmpty(t, resp.Body)
+	require.NotEmpty(t, resp.Body)
 
 	// разделение строки в массив и сравнение общего количества с количеством объектов в массиве
 	cities := strings.Split(resp.Body.String(), ",")
@@ -40,7 +42,7 @@ func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 
 // Город, который передаётся в параметре city, не поддерживается. Сервис возвращает код ответа 400 и ошибку wrong city value в теле ответа.
 func TestMainHandlerWhenWrongCity(t *testing.T) {
-	resp := initTestRequest("2", "moscoww")
+	resp := initTestRequest(2, "moscoww")
 
 	// проверка: код ответа 400, ошибка wrong city value в теле ответа
 	require.Equal(t, http.StatusBadRequest, resp.Code)
@@ -50,7 +52,7 @@ func TestMainHandlerWhenWrongCity(t *testing.T) {
 
 // Запрос сформирован корректно, сервис возвращает код ответа 200 и тело ответа не пустое.
 func TestMainHandlerWhenOK(t *testing.T) {
-	resp := initTestRequest("2", "moscow")
+	resp := initTestRequest(2, "moscow")
 
 	// проверка: код ответа 200, тело ответа не пустое
 	require.Equal(t, http.StatusOK, resp.Code)
