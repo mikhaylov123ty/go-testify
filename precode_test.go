@@ -25,7 +25,7 @@ func initTestRequest(count int, city string) *httptest.ResponseRecorder {
 	return responseRecorder
 }
 
-// Если в параметре count указано больше, чем есть всего, должны вернуться все доступные кафе.
+// Если в параметре count указано больше, чем есть всего, должны вернуться все доступные кафе
 func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 	totalCount := 4
 
@@ -40,7 +40,7 @@ func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 	assert.Equal(t, len(cities), totalCount)
 }
 
-// Город, который передаётся в параметре city, не поддерживается. Сервис возвращает код ответа 400 и ошибку wrong city value в теле ответа.
+// Город, который передаётся в параметре city, не поддерживается. Сервис возвращает код ответа 400 и ошибку wrong city value в теле ответа
 func TestMainHandlerWhenWrongCity(t *testing.T) {
 	resp := initTestRequest(2, "moscoww")
 
@@ -50,7 +50,7 @@ func TestMainHandlerWhenWrongCity(t *testing.T) {
 	assert.Equal(t, "wrong city value", resp.Body.String())
 }
 
-// Запрос сформирован корректно, сервис возвращает код ответа 200 и тело ответа не пустое.
+// Запрос сформирован корректно, сервис возвращает код ответа 200 и тело ответа не пустое
 func TestMainHandlerWhenOK(t *testing.T) {
 	resp := initTestRequest(2, "moscow")
 
