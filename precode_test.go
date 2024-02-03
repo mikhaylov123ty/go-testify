@@ -19,6 +19,7 @@ func initTestRequest(count string, city string) *httptest.ResponseRecorder {
 	responseRecorder := httptest.NewRecorder()
 	handler := http.HandlerFunc(mainHandle)
 	handler.ServeHTTP(responseRecorder, req)
+
 	return responseRecorder
 }
 
@@ -33,7 +34,7 @@ func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 	assert.NotEmpty(t, resp.Body)
 
 	// разделение строки в массив и сравнение общего количества с количеством объектов в массиве
-	cities := strings.Split(fmt.Sprint(resp.Body), ",")
+	cities := strings.Split(resp.Body.String(), ",")
 	assert.Equal(t, len(cities), totalCount)
 }
 
@@ -44,7 +45,7 @@ func TestMainHandlerWhenWrongCity(t *testing.T) {
 	// проверка: код ответа 400, ошибка wrong city value в теле ответа
 	require.Equal(t, http.StatusBadRequest, resp.Code)
 	require.NotEmpty(t, resp.Body)
-	assert.Equal(t, "wrong city value", fmt.Sprint(resp.Body))
+	assert.Equal(t, "wrong city value", resp.Body.String())
 }
 
 // Запрос сформирован корректно, сервис возвращает код ответа 200 и тело ответа не пустое.
